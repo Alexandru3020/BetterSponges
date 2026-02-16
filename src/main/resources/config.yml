@@ -1,5 +1,7 @@
 super_sponge:
   radius: 20
+  #Absorption shapes: DIAMOND, CUBE, SPHERE | the default is DIAMOND (doesn't have to be all caps btw)
+  absorption_shape: DIAMOND
   #If the water should keep flowing after it was absorbed. (true = update blocks)
   #Blocks like coral won't be updated when the water is removed, resulting in them not being able to die.
   update_blocks: false

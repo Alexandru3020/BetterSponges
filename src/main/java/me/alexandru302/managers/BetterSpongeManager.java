@@ -10,7 +10,6 @@ import org.bukkit.entity.Item;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.block.data.Waterlogged;
 import org.bukkit.util.Vector;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
@@ -32,6 +31,7 @@ public class BetterSpongeManager {
     private Set<Material> replaceableMaterials;
     private long absorbIntervalTicks;
     private boolean updateBlocks;
+    private AbsorptionShape absorptionShape = AbsorptionShape.DIAMOND;
 
     public void reloadConfig() {
         plugin.reloadConfig();
@@ -40,6 +40,7 @@ public class BetterSpongeManager {
         this.replaceableMaterials = parseMaterials(config.getStringList("super_sponge.replace_blocks"));
         this.absorbIntervalTicks = config.getLong("super_sponge.absorb_interval_ticks", 1L);
         this.updateBlocks = config.getBoolean("super_sponge.update_blocks", true);
+        this.absorptionShape = AbsorptionShape.fromConfig(config.getString("super_sponge.absorption_shape"));
     }
 
     public void startAbsorb(Location center) {
@@ -50,8 +51,12 @@ public class BetterSpongeManager {
         Deque<Node> queue = new ArrayDeque<>();
         Set<BlockPos> visited = new HashSet<>();
 
-        queue.add(new Node(center.getBlockX(), center.getBlockY(), center.getBlockZ(), 0));
-        visited.add(new BlockPos(center.getBlockX(), center.getBlockY(), center.getBlockZ()));
+        int x = center.getBlockX();
+        int y = center.getBlockY();
+        int z = center.getBlockZ();
+
+        queue.add(new Node(x, y, z, 0));
+        visited.add(new BlockPos(x, y, z));
 
         world.playSound(center, Sound.BLOCK_SPONGE_ABSORB, 2, 0);
 
@@ -73,13 +78,14 @@ public class BetterSpongeManager {
                     target.setType(Material.AIR, updateBlocks);
                 }
 
-                if ((node.dist == 0 || isReplaceable || isWaterlogged) && node.dist < radius) {
+                if ((node.dist == 0 || isReplaceable || isWaterlogged) && canExpandFrom(x, y, z, node.x, node.y, node.z)) {
                     for (BlockFace face : DIRECTIONS) {
                         int nx = node.x + face.getModX();
                         int ny = node.y + face.getModY();
                         int nz = node.z + face.getModZ();
                         BlockPos nextPos = new BlockPos(nx, ny, nz);
-                        if (visited.add(nextPos)) {
+
+                        if (isWithinShape(x, y, z, nx, ny, nz) && visited.add(nextPos)) {
                             queue.add(new Node(nx, ny, nz, node.dist + 1));
                         }
                     }
@@ -125,6 +131,43 @@ public class BetterSpongeManager {
         }
         return parsed;
     }
+
+    private boolean isWithinShape(int cx, int cy, int cz, int x, int y, int z) {
+        return switch (absorptionShape) {
+            case DIAMOND -> diamondDistance(cx, cy, cz, x, y, z) <= radius;
+            case CUBE -> cubeDistance(cx, cy, cz, x, y, z) <= radius;
+            case SPHERE -> sphereDistanceSquared(cx, cy, cz, x, y, z) <= squaredRadius();
+        };
+    }
+
+    private boolean canExpandFrom(int cx, int cy, int cz, int x, int y, int z) {
+        return switch (absorptionShape) {
+            case DIAMOND -> diamondDistance(cx, cy, cz, x, y, z) < radius;
+            case CUBE -> cubeDistance(cx, cy, cz, x, y, z) < radius;
+            case SPHERE -> sphereDistanceSquared(cx, cy, cz, x, y, z) < squaredRadius();
+        };
+    }
+
+    private int diamondDistance(int cx, int cy, int cz, int x, int y, int z) {
+        return Math.abs(x - cx) + Math.abs(y - cy) + Math.abs(z - cz);
+    }
+
+    private int cubeDistance(int cx, int cy, int cz, int x, int y, int z) {
+        return Math.max(Math.max(Math.abs(x - cx), Math.abs(y - cy)), Math.abs(z - cz));
+    }
+
+    private long sphereDistanceSquared(int cx, int cy, int cz, int x, int y, int z) {
+        long dx = x - (long) cx;
+        long dy = y - (long) cy;
+        long dz = z - (long) cz;
+        return dx * dx + dy * dy + dz * dz;
+    }
+
+    private long squaredRadius() {
+        long r = radius;
+        return r * r;
+    }
+
     public boolean isSuperSponge(ItemStack item) {
         return ItemManager.isItem(item, SuperSponge.ID);
     }
