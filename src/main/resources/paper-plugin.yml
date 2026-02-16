@@ -1,0 +1,7 @@
+name: BetterSponges
+version: '${project.version}'
+main: me.alexandru302.BetterSponges
+api-version: '1.21'
+load: STARTUP
+authors: [ Alexandru302 ]
+description: Turns that laggy datapack into a more optimized plugin

@@ -1,0 +1,23 @@
+super_sponge:
+  radius: 20
+  #If the water should keep flowing after it was absorbed. (true = update blocks)
+  #Blocks like coral won't be updated when the water is removed, resulting in them not being able to die.
+  update_blocks: false
+  absorb_interval_ticks: 1
+  replace_blocks:
+    - WATER
+    - BUBBLE_COLUMN
+    - KELP
+    - KELP_PLANT
+    - SEAGRASS
+    - TALL_SEAGRASS
+    - GLOW_LICHEN
+  recipe:
+    enabled: true
+    shape:
+      - "SSS"
+      - "SNS"
+      - "SSS"
+    ingredients:
+      S: SPONGE
+      N: NETHER_STAR
