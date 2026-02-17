@@ -42,6 +42,7 @@ public class BetterSpongeCommand implements BasicCommand {
     private void handleReload(CommandSourceStack source) {
         BetterSponges.getInstance().reloadConfig();
         betterSpongeManager.reloadConfig();
+        BetterSponges.getInstance().reloadRecipes();
         ItemManager.refreshItemStacks();
         ItemManager.refreshOnlineInventories();
         BetterSponges.getInstance().restartTooltipRefreshTask();

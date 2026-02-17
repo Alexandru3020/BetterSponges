@@ -51,6 +51,13 @@ public final class BetterSponges extends JavaPlugin {
 
         tooltipRefreshTask = getServer().getScheduler().runTaskTimer(this, ItemManager::refreshOnlineInventories, interval, interval);
     }
+
+    public void reloadRecipes() {
+        if (superSpongeRecipe != null) superSpongeRecipe.unregister();
+
+        superSpongeRecipe = new SuperSpongeRecipe();
+        superSpongeRecipe.register();
+    }
     public BetterSpongeManager getSpongeManager() {
         return betterSpongeManager;
     }
