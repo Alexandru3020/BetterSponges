@@ -43,6 +43,8 @@ public class BetterSpongeCommand implements BasicCommand {
         BetterSponges.getInstance().reloadConfig();
         betterSpongeManager.reloadConfig();
         ItemManager.refreshItemStacks();
+        ItemManager.refreshOnlineInventories();
+        BetterSponges.getInstance().restartTooltipRefreshTask();
         source.getSender().sendMessage(Component.text("BetterSponges reloaded.", NamedTextColor.GREEN));
     }
 
