@@ -1,5 +1,6 @@
 package me.alexandru302.events;
 
+import me.alexandru302.BetterSponges;
 import me.alexandru302.managers.BetterSpongeManager;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -7,12 +8,7 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.block.SpongeAbsorbEvent;
 
 public class BetterSpongeEvents implements Listener {
-
-    private final BetterSpongeManager manager;
-
-    public BetterSpongeEvents(BetterSpongeManager manager) {
-        this.manager = manager;
-    }
+    private final BetterSpongeManager manager = BetterSponges.getInstance().getSpongeManager();
 
     @EventHandler
     public void onBlockPlace(BlockPlaceEvent event) {

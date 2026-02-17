@@ -22,7 +22,7 @@ public final class BetterSponges extends JavaPlugin {
         betterSpongeManager.reloadConfig();
         superSpongeRecipe = new SuperSpongeRecipe();
         superSpongeRecipe.register();
-        getServer().getPluginManager().registerEvents(new BetterSpongeEvents(betterSpongeManager), this);
+        getServer().getPluginManager().registerEvents(new BetterSpongeEvents(), this);
         restartTooltipRefreshTask();
 
         getLifecycleManager().registerEventHandler(LifecycleEvents.COMMANDS, event -> {
@@ -50,5 +50,8 @@ public final class BetterSponges extends JavaPlugin {
         if (interval <= 0) return;
 
         tooltipRefreshTask = getServer().getScheduler().runTaskTimer(this, ItemManager::refreshOnlineInventories, interval, interval);
+    }
+    public BetterSpongeManager getSpongeManager() {
+        return betterSpongeManager;
     }
 }
