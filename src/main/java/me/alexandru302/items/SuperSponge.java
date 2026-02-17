@@ -19,15 +19,11 @@ public class SuperSponge implements ICustomItem {
         ItemStack item = new ItemStack(Material.SPONGE);
         ItemMeta meta = item.getItemMeta();
 
-        int radius = BetterSponges.getInstance().getConfig().getInt("super_sponge.radius", 8);
+        int radius = BetterSponges.getInstance().getConfig().getInt("super_sponge.radius", 20);
         String nameRaw = BetterSponges.getInstance().getConfig().getString("super_sponge.item.name", "&dSuper Sponge");
         List<String> loreRaw = BetterSponges.getInstance().getConfig().getStringList("super_sponge.item.lore");
-        if (loreRaw.isEmpty()) {
-            loreRaw = List.of("&7Absorbs all water in a {radius} block radius.");
-        }
-
         meta.displayName(parse(nameRaw, radius));
-        meta.lore(loreRaw.stream().map(line -> parse(line, radius)).collect(Collectors.toList()));
+        meta.lore(buildLore(loreRaw, radius));
         meta.setEnchantmentGlintOverride(true);
         item.setItemMeta(meta);
         return item;
@@ -38,10 +34,13 @@ public class SuperSponge implements ICustomItem {
         return ID;
     }
 
-    private Component parse(String raw, int radius) {
-        String resolved = raw == null ? "" : raw.replace("{radius}", String.valueOf(radius));
+    public static List<Component> buildLore(List<String> loreRaw, int radius) {
+        return loreRaw.stream().map(line -> parse(line, radius)).collect(Collectors.toList());
+    }
+
+    private static Component parse(String raw, int radius) {
         return LegacyComponentSerializer.legacyAmpersand()
-                .deserialize(resolved)
+                .deserialize(raw == null ? "" : raw.replace("{radius}", String.valueOf(radius)))
                 .decoration(TextDecoration.ITALIC, false);
     }
 }

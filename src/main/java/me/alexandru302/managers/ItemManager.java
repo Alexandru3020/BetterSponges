@@ -12,10 +12,6 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.format.TextDecoration;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -112,28 +108,14 @@ public class ItemManager implements Listener {
     }
 
     private static void applySuperSpongeTooltipRadius(ItemStack stack) {
-        if (stack == null) return;
         ItemMeta meta = stack.getItemMeta();
-        if (meta == null) return;
 
-        List<String> loreTemplate = BetterSponges.getInstance()
+        List<String> lore = BetterSponges.getInstance()
                 .getConfig()
                 .getStringList("super_sponge.item.lore");
-        if (loreTemplate.isEmpty()) {
-            loreTemplate = List.of("&7Absorbs all water in a {radius} block radius.");
-        }
-
-        int radius = BetterSponges.getInstance().getConfig().getInt("super_sponge.radius", 8);
-        meta.lore(loreTemplate.stream()
-                .map(line -> parseTemplate(line, radius))
-                .collect(Collectors.toList()));
+        meta.lore(SuperSponge.buildLore(lore, BetterSponges.getInstance()
+                .getConfig().
+                getInt("super_sponge.radius", 20)));
         stack.setItemMeta(meta);
-    }
-
-    private static Component parseTemplate(String raw, int radius) {
-        String resolved = raw == null ? "" : raw.replace("{radius}", String.valueOf(radius));
-        return LegacyComponentSerializer.legacyAmpersand()
-                .deserialize(resolved)
-                .decoration(TextDecoration.ITALIC, false);
     }
 }
