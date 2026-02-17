@@ -102,7 +102,7 @@ public class BetterSpongeCommand implements BasicCommand {
             return switch (args.length) {
                 case 2 -> StringUtil.copyPartialMatches(args[1], ItemManager.getAllItemIds(), new ArrayList<>());
                 case 3 -> StringUtil.copyPartialMatches(args[2], getPlaceholderGiveCount(), new ArrayList<>());
-                case 4 -> StringUtil.copyPartialMatches(args[3], getPlayerNames(), new ArrayList<>());
+                case 4 -> StringUtil.copyPartialMatches(args[3], Bukkit.getOnlinePlayers().stream().map(Player::getName).toList(), new ArrayList<>());
                 default -> List.of();
             };
         }
@@ -111,12 +111,8 @@ public class BetterSpongeCommand implements BasicCommand {
 
     private List<String> getPlaceholderGiveCount() {
         List<String> options = new ArrayList<>(List.of("1", "16", "32", "64"));
-        options.addAll(getPlayerNames());
+        options.addAll(Bukkit.getOnlinePlayers().stream().map(Player::getName).toList());
         return options;
-    }
-
-    private List<String> getPlayerNames() {
-        return Bukkit.getOnlinePlayers().stream().map(Player::getName).toList();
     }
 
     @Override
