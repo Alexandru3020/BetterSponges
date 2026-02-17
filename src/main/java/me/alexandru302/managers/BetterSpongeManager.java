@@ -31,7 +31,7 @@ public class BetterSpongeManager {
     private Set<Material> replaceableMaterials;
     private long absorbIntervalTicks;
     private boolean updateBlocks;
-    private AbsorptionShape absorptionShape = AbsorptionShape.DIAMOND;
+    private AbsorptionShape absorptionShape = AbsorptionShape.CUBE;
 
     public void reloadConfig() {
         plugin.reloadConfig();
