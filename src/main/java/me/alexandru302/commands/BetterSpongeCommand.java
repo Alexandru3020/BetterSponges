@@ -55,7 +55,7 @@ public class BetterSpongeCommand implements BasicCommand {
             return;
         }
 
-        ItemStack item = ItemManager.getItemStack(args[1]);
+        ItemStack item = ItemManager.getItemStack(args[1]).clone();
         if (item == null) {
             source.getSender().sendMessage(Component.text("Unknown item id: " + args[1], NamedTextColor.RED));
             return;
