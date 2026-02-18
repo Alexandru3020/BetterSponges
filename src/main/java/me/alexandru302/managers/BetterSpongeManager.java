@@ -59,7 +59,7 @@ public class BetterSpongeManager {
         visited.add(new BlockPos(x, y, z));
 
         world.playSound(center, Sound.BLOCK_SPONGE_ABSORB, 2, 0);
-
+        plugin.getLogger().severe("Starting to absorb");
         plugin.getServer().getScheduler().runTaskTimer(plugin, task -> {
             int nodesThisTick = queue.size();
             for (int i = 0; i < nodesThisTick; i++) {
@@ -73,7 +73,7 @@ public class BetterSpongeManager {
                     waterlogged.setWaterlogged(false);
                     target.setBlockData(waterlogged, updateBlocks);
                 }
-
+                plugin.getLogger().severe("absorbing");
                 if (isReplaceable) {
                     target.setType(Material.AIR, updateBlocks);
                 }
@@ -99,12 +99,13 @@ public class BetterSpongeManager {
                 center.getBlock().setType(Material.AIR, true);
                 placedSuperSponges.remove(key);
                 ItemStack spongeItem = ItemManager.getItemStack(SuperSponge.ID);
-
+                plugin.getLogger().severe(String.valueOf(spongeItem.getAmount()));
                 if (spongeItem != null) {
                     Location spawnLoc = center.clone().add(0.5, 0.5, 0.5);
                     world.spawnParticle(Particle.CLOUD, spawnLoc, 25, 0.2, 0.2, 0.2, 0.1);
                     world.spawnParticle(Particle.FALLING_WATER, spawnLoc, 25, 0.2, 0.2, 0.2, 0.1);
                     world.spawn(spawnLoc, Item.class, itemEntity -> {
+                        plugin.getLogger().severe("Spawned");
                         itemEntity.setItemStack(spongeItem);
                         itemEntity.setGravity(false);
                         itemEntity.setPersistent(true);
