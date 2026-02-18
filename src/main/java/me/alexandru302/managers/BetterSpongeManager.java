@@ -98,9 +98,12 @@ public class BetterSpongeManager {
 
                 center.getBlock().setType(Material.AIR, true);
                 placedSuperSponges.remove(key);
-                ItemStack spongeItem = ItemManager.getItemStack(SuperSponge.ID);
-                plugin.getLogger().severe(String.valueOf(spongeItem.getAmount()));
-                if (spongeItem != null) {
+                ItemStack baseItem = ItemManager.getItemStack(SuperSponge.ID);
+                plugin.getLogger().severe("base item" + baseItem.getAmount());
+                if (baseItem != null) {
+                    ItemStack spongeItem = baseItem.clone();
+                    spongeItem.setAmount(1);
+
                     Location spawnLoc = center.clone().add(0.5, 0.5, 0.5);
                     world.spawnParticle(Particle.CLOUD, spawnLoc, 25, 0.2, 0.2, 0.2, 0.1);
                     world.spawnParticle(Particle.FALLING_WATER, spawnLoc, 25, 0.2, 0.2, 0.2, 0.1);

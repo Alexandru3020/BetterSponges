@@ -1,6 +1,7 @@
 package me.alexandru302.events;
 
 import me.alexandru302.BetterSponges;
+import me.alexandru302.items.SuperSponge;
 import me.alexandru302.managers.BetterSpongeManager;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -13,7 +14,7 @@ public class BetterSpongeEvents implements Listener {
     @EventHandler
     public void onBlockPlace(BlockPlaceEvent event) {
         if (!manager.isSuperSponge(event.getItemInHand())) return;
-
+        BetterSponges.getInstance().getLogger().severe("BlockPlaceEvent miau");
         manager.markSuperSpongePlaced(event.getBlockPlaced().getLocation());
         manager.startAbsorb(event.getBlockPlaced().getLocation());
     }

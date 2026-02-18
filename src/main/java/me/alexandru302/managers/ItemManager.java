@@ -81,6 +81,7 @@ public class ItemManager implements Listener {
     }
 
     public static ItemStack getItemStack(String id) {
+        BetterSponges.getInstance().getLogger().severe(id + " " + itemStacks.values());
         return itemStacks.get(id);
     }
     public static List<String> getAllItemIds() {
